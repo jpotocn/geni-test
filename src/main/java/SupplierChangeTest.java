@@ -1,4 +1,5 @@
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -11,33 +12,19 @@ public class SupplierChangeTest extends SeleniumTest {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
-    @FindBy(id = "EnergyType-ElectricityType")
-    private WebElement electricityRadio;
-
-    @FindBy(id = "FirstName")
-    private WebElement name;
-
-    @FindBy(id = "LastName")
-    private WebElement surname;
-
-    @FindBy(id = "Email")
-    private WebElement email;
-
-    @FindBy(name = "Telephone")
-    private WebElement phone;
-
-    @FindBy(name = "AcceptDataProcessing")
-    private WebElement acceptDataProcessing;
-
-    @FindBy(xpath = "//*[@id=\"type1\"]")
-    private WebElement fillTheForm;
-
-    @FindBy(css = "submit")
-    private WebElement submit;
+    private String electricityRadio = "EnergyType-ElectricityType";
+    private String surname = "LastName";
+    private String name = "FirstName";
+    private String email = "Email";
+    private String phone = "Telephone";
+    private String acceptDataProcessing = "AcceptDataProcessing";
+    private String fillTheForm = "type1";
+    private String submit = "#page > div > section > article > form > div.buttons > div > button";
+    private String errorSign = "#page > div > section > article > form > div:nth-child(7) > div > div > div.cs-types-error-row > div > div > img";
 
 
     public boolean isInitialized() {
-        return name.isDisplayed();
+        return !driver.getCurrentUrl().contains("change-supplier.xhtml");
     }
 
     @Test
@@ -59,8 +46,31 @@ public class SupplierChangeTest extends SeleniumTest {
 
     @Test
     public void test_01() throws Exception {
+        driver.findElement(By.id(electricityRadio)).click();
+        driver.findElement(By.id(name)).sendKeys("testna stranka");
+        CommonUtilis.wait(100);
+        driver.findElement(By.id(surname)).sendKeys("testna stranka");
+        CommonUtilis.wait(100);
+        driver.findElement(By.id(email)).sendKeys("testniNaslov@gmail.com");
+        CommonUtilis.wait(100);
+        driver.findElement(By.id(phone)).sendKeys("040123456");
+        CommonUtilis.wait(100);
+        driver.findElement(By.id(acceptDataProcessing)).click();
+        CommonUtilis.wait(100);
+        driver.findElement(By.cssSelector(submit)).click();
+        CommonUtilis.wait(100);
 
+    }
 
+    @Test
+    public void test_02() throws Exception {
+        System.out.println("test 02");
+        if (driver.findElement(By.cssSelector(errorSign)).isDisplayed()) {
+            driver.findElement(By.id(fillTheForm)).click();
+            driver.findElement(By.cssSelector(submit)).click();
+        } else {
+            driver.findElement(By.cssSelector(submit)).click();
+        }
     }
 
 }
